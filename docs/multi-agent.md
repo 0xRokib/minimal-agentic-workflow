@@ -199,46 +199,79 @@ multi-agent orchestration to OpenCode — no manual model switching.
 | Agent                  | Model (OpenCode Go) | Role                                       |
 | ---------------------- | ------------------- | ------------------------------------------ |
 | `build`                | Kimi K2.6           | Primary — writes code, implements features |
-| `planner`              | GLM-5.1             | Plans implementation, breaks into tasks    |
-| `architect`            | GLM-5.1             | System design, architectural decisions     |
-| `code-reviewer`        | MiMo V2.5 Pro       | Audits code quality, finds issues          |
-| `security-reviewer`    | MiMo V2.5 Pro       | Vulnerability detection, auth checks       |
+| `planner`              | Qwen3.6 Plus        | Plans implementation, breaks into tasks    |
+| `architect`            | Qwen3.6 Plus        | System design, architectural decisions     |
+| `code-reviewer`        | Kimi K2.6           | Audits code quality, finds bugs            |
+| `security-reviewer`    | MiniMax M2.7        | Deep vulnerability scan                    |
 | `tdd-guide`            | DeepSeek V4 Pro     | Enforces test-first, 80%+ coverage         |
-| `build-error-resolver` | MiMo V2.5 Pro       | Fixes build/type errors, minimal diffs     |
-| `refactor-cleaner`     | DeepSeek V4 Flash   | Dead code removal, consolidation           |
-| `doc-updater`          | GLM-5.1             | Documentation sync, codemap updates        |
+| `build-error-resolver` | Kimi K2.6           | Fixes build/type errors, minimal diffs     |
+| `refactor-cleaner`     | DeepSeek V4 Flash   | Lightweight dead code cleanup              |
+| `refactor-heavy`       | DeepSeek V4 Pro     | Heavy structural refactoring               |
+| `doc-updater`          | Qwen3.6 Plus        | Documentation drafting, changelogs         |
+| `doc-polisher`         | Kimi K2.5           | Final docs polish, clarity pass            |
 
 ### How ECC Routes Models Automatically
 
 Each `/command` maps to an agent, which maps to a model:
 
 ```
-/plan   → planner agent → GLM-5.1
-/tdd    → tdd-guide agent → DeepSeek V4 Pro
-/review → code-reviewer agent → MiMo V2.5 Pro
+/plan         → planner agent    → Qwen3.6 Plus
+/tdd          → tdd-guide agent  → DeepSeek V4 Pro
+/code-review  → code-reviewer    → Kimi K2.6
+/security     → security-reviewer → MiniMax M2.7
+/refactor-clean → refactor-cleaner → DeepSeek V4 Flash
+/refactor-heavy → refactor-heavy   → DeepSeek V4 Pro
+/polish-docs  → doc-polisher     → Kimi K2.5
 ```
 
 All run as `subtask: true` — they spin up, complete, and return. No manual model switching.
 
-### ECC as a TEAM Pattern
+### The Full ECC Pipeline
+
+Recommended end-to-end workflow for any non-trivial feature:
 
 ```
-You: /plan add payment integration
-           ↓
-    planner (GLM-5.1) → structured task list
-           ↓
-    build (Kimi K2.6) → implements each task
-           ↓
-    /code-review
-    code-reviewer (MiMo V2.5 Pro) → audits output
-           ↓
-    /security
-    security-reviewer (MiMo V2.5 Pro) → checks auth/payment code
-           ↓
-    git commit
+/plan <feature>
+Qwen3.6 Plus (planner / architect)
+— produces implementation plan, ADR, task breakdown
+        ↓
+/tdd
+DeepSeek V4 Pro (tdd-guide)
+— writes tests first, implements to pass them (80%+ coverage)
+        ↓
+/code-review
+Kimi K2.6 (code-reviewer)
+— audits quality, finds bugs, checks maintainability
+        ↓
+/security
+MiniMax M2.7 (security-reviewer)
+— deep vulnerability scan, auth, injection, data exposure
+        ↓
+/build-fix  (if issues found)
+DeepSeek V4 Pro (build-error-resolver for critical)
+— fixes flagged issues with minimal diffs
+        ↓
+/refactor-clean  or  /refactor-heavy
+DeepSeek V4 Flash (light) / DeepSeek V4 Pro (structural)
+— removes dead code, consolidates duplication
+        ↓
+/polish-docs
+Kimi K2.5 (doc-polisher)
+— final documentation pass, clarity and consistency
+        ↓
+git commit
+```
+
+**When to use the full pipeline**: new features, PRs, anything touching auth/payments/data.
+**When to skip steps**: small fixes → just `/build-fix` + `/code-review`.
+
+### Lightweight Loop (daily use)
+
+```
+/plan → build (Kimi K2.6) → /code-review → git commit
 ```
 
 ### Cost: All Included
 
 With OpenCode Go ($10/mo flat), all agents in the fleet run at zero extra cost —
-no per-token billing when switching between GLM-5.1, Kimi K2.6, MiMo V2.5 Pro, or DeepSeek.
+no per-token billing switching between Qwen3.6 Plus, Kimi K2.6/K2.5, MiniMax M2.7, or DeepSeek V4 Pro/Flash.
