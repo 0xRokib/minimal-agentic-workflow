@@ -198,7 +198,7 @@ multi-agent orchestration to OpenCode — no manual model switching.
 
 | Agent                  | Model (OpenCode Go) | Role                                       |
 | ---------------------- | ------------------- | ------------------------------------------ |
-| `build`                | Kimi K2.6           | Primary — writes code, implements features |
+| `build`                | DeepSeek V4 Pro     | Primary — writes code, implements features |
 | `planner`              | Qwen3.6 Plus        | Plans implementation, breaks into tasks    |
 | `architect`            | Qwen3.6 Plus        | System design, architectural decisions     |
 | `code-reviewer`        | Kimi K2.6           | Audits code quality, finds bugs            |
@@ -268,7 +268,7 @@ git commit
 ### Lightweight Loop (daily use)
 
 ```
-/plan → build (Kimi K2.6) → /code-review → git commit
+/plan → build (DeepSeek V4 Pro) → /code-review → git commit
 ```
 
 ### Cost: All Included
