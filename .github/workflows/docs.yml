@@ -1,0 +1,65 @@
+name: Docs Validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.md'
+      - '.context/**'
+      - 'AGENTS.md'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**.md'
+      - '.context/**'
+      - 'AGENTS.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check markdown files exist
+        run: |
+          MISSING=0
+          # Every doc referenced in README must exist
+          for doc in opencode-go.md llm-providers.md single-agent.md multi-agent.md skills.md security.md best-practices.md redotpay.md; do
+            if [ ! -f "docs/$doc" ]; then
+              echo "❌ Missing: docs/$doc"
+              MISSING=$((MISSING + 1))
+            else
+              echo "✅ Found: docs/$doc"
+            fi
+          done
+
+          # Core project files must exist
+          for file in AGENTS.md .context/CONTEXT.md .context/ARCHITECTURE.md .context/todo.md README.md; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing: $file"
+              MISSING=$((MISSING + 1))
+            else
+              echo "✅ Found: $file"
+            fi
+          done
+
+          if [ $MISSING -gt 0 ]; then
+            echo "::error::$MISSING referenced file(s) missing"
+            exit 1
+          fi
+
+      - name: Check internal markdown links
+        uses: gaurav-nelson/github-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'yes'
+          config-file: '.github/mlc_config.json'
+          folder-path: '.'
+          check-modified-files-only: 'yes'
+
+      - name: Validate markdown formatting
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: |
+            **/*.md
+            !node_modules/**/*.md
