@@ -17,7 +17,7 @@ Skills are loaded by the agent on startup or on demand. They modify the system p
 
 ---
 
-## The Two Skill Ecosystems
+## The Three Skill Ecosystems
 
 ### addyosmani/agent-skills — Production Engineering
 
@@ -58,6 +58,55 @@ Focused on fixing specific failure modes. Works with any model.
 | `improve-codebase-architecture` | Engineering | Codebase turns into mud |
 | `zoom-out` | Engineering | Agent loses the big picture |
 
+### affaan-m/everything-claude-code (ECC) — OpenCode Native
+
+182 skills purpose-built for OpenCode with a full agent + command system.
+**Repo**: [github.com/affaan-m/everything-claude-code](https://github.com/affaan-m/everything-claude-code)
+
+**Philosophy**: Specialized agents per task with automatic model routing. Skills load on
+session start — no manual activation needed.
+
+**Default loaded skills (11):**
+| Skill | What it enforces |
+|-------|-----------------|
+| `tdd-workflow` | Red-green-refactor, tests first |
+| `security-review` | Vulnerability detection before commit |
+| `coding-standards` | Immutability, file size, naming |
+| `frontend-patterns` | React, component architecture |
+| `backend-patterns` | API design, error handling |
+| `e2e-testing` | Playwright, critical user flows |
+| `verification-loop` | Automated check after every change |
+| `api-design` | REST/GraphQL best practices |
+| `strategic-compact` | Context compression under pressure |
+| `eval-harness` | Evaluation criteria and scoring |
+| `frontend-slides` | Presentation component patterns |
+
+**Additional skills (171 more) — notable ones:**
+
+```
+golang-patterns     rust-patterns       python-patterns
+kotlin-patterns     swift-concurrency   django-tdd
+springboot-tdd      laravel-tdd         nextjs-turbopack
+postgres-patterns   docker-patterns     git-workflow
+deep-research       security-bounty-hunter  hipaa-compliance
+cost-aware-llm-pipeline  context-budget  token-budget-advisor
+autonomous-loops    continuous-learning  agentic-engineering
+```
+
+**Paired commands (25+ slash commands):**
+
+```
+/plan           → GLM-5.1 plans implementation
+/tdd            → DeepSeek V4 Pro enforces test-first
+/code-review    → MiMo V2.5 Pro audits code
+/security       → MiMo V2.5 Pro checks for vulnerabilities
+/build-fix      → MiMo V2.5 Pro fixes build errors
+/verify         → confirms everything works
+/checkpoint     → saves session progress
+/learn          → extracts patterns for reuse
+/skill-create   → generates new skills from git history
+```
+
 ---
 
 ## Composing Your Own Skills
@@ -68,31 +117,37 @@ Skills are plain markdown. Here's the template:
 # Skill: [name]
 
 ## When to Use
+
 - Trigger: `/my-command` or auto-detect conditions
 - Applies to: TypeScript projects, React components, etc.
 
 ## Workflow
 
 ### Step 1: Understand
+
 1. Read [specific files]
 2. Check [conditions]
 3. Ask user if [uncertain]
 
 ### Step 2: Execute
+
 1. Do [specific action]
 2. Verify by [check]
 3. If fail → [fallback]
 
 ## Verification Gates
+
 - [ ] Gate 1: [condition]
 - [ ] Gate 2: [condition]
 
 ## Anti-Patterns
-| Don't | Why | Do Instead |
-|-------|-----|------------|
+
+| Don't         | Why             | Do Instead         |
+| ------------- | --------------- | ------------------ |
 | Skip the spec | Leads to rework | Always /spec first |
 
 ## Reference
+
 - [Link to relevant docs]
 ```
 
@@ -132,6 +187,30 @@ pi install git:github.com/ruizrica/agent-pi
 # Skills auto-discovered from the package
 ```
 
+### affaan-m/everything-claude-code (ECC) — OpenCode
+
+```bash
+# Step 1: Install the npm plugin globally
+cd ~/.config/opencode
+npm install ecc-universal
+
+# Step 2: Clone and copy skills + commands
+git clone --depth=1 https://github.com/affaan-m/everything-claude-code /tmp/ecc
+cp -r /tmp/ecc/.opencode/commands ~/.config/opencode/commands
+cp -r /tmp/ecc/.opencode/prompts ~/.config/opencode/prompts
+cp -r /tmp/ecc/.opencode/instructions ~/.config/opencode/instructions
+cp -r /tmp/ecc/skills ~/.config/opencode/skills
+
+# Step 3: Add to ~/.config/opencode/opencode.json
+# "plugin": ["ecc-universal"],
+# "instructions": ["skills/tdd-workflow/SKILL.md", ...]
+
+# Per-project: copy .opencode/ into your project root
+cp -r /tmp/ecc/.opencode/commands .opencode/commands
+cp -r /tmp/ecc/.opencode/prompts .opencode/prompts
+cp -r /tmp/ecc/.opencode/instructions .opencode/instructions
+```
+
 ---
 
 ## Which Skills to Start With
@@ -146,23 +225,18 @@ pi install git:github.com/ruizrica/agent-pi
 
 ### Full Production Set (10 skills)
 
-Add these once you're comfortable:
-6. **spec-driven-development** — For new features
-7. **context-engineering** — Better agent context management
-8. **debugging-and-error-recovery** — Systematic debugging
-9. **security-and-hardening** — Security awareness
-10. **improve-codebase-architecture** — Weekly cleanup
+Add these once you're comfortable: 6. **spec-driven-development** — For new features 7. **context-engineering** — Better agent context management 8. **debugging-and-error-recovery** — Systematic debugging 9. **security-and-hardening** — Security awareness 10. **improve-codebase-architecture** — Weekly cleanup
 
 ---
 
 ## Skills vs MCP Tools
 
-| Aspect | Skills | MCP Tools |
-|--------|--------|-----------|
-| What they are | Markdown workflows | API-connected tools |
-| Modifies | Agent behavior/prompt | Available tool set |
-| Example | "How to do TDD" | "Connect to Jira" |
-| Creation | Write markdown | Write server code |
-| Portability | Works with any agent | Specific to MCP servers |
+| Aspect        | Skills                | MCP Tools               |
+| ------------- | --------------------- | ----------------------- |
+| What they are | Markdown workflows    | API-connected tools     |
+| Modifies      | Agent behavior/prompt | Available tool set      |
+| Example       | "How to do TDD"       | "Connect to Jira"       |
+| Creation      | Write markdown        | Write server code       |
+| Portability   | Works with any agent  | Specific to MCP servers |
 
 They're complementary — skills define HOW to work, MCP tools define WHAT you can work with.

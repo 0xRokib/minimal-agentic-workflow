@@ -8,11 +8,11 @@ When one agent isn't enough — dispatch teams of specialists, chain sequential 
 
 ## Three Orchestration Patterns
 
-| Pattern | Model | Best For |
-|---------|-------|----------|
-| **TEAM** | Parallel dispatch | Independent workstreams that can run simultaneously |
-| **CHAIN** | Sequential pipeline | Steps where output of one feeds into the next |
-| **PIPELINE** | 5-phase hybrid | Complex projects needing structure |
+| Pattern      | Model               | Best For                                            |
+| ------------ | ------------------- | --------------------------------------------------- |
+| **TEAM**     | Parallel dispatch   | Independent workstreams that can run simultaneously |
+| **CHAIN**    | Sequential pipeline | Steps where output of one feeds into the next       |
+| **PIPELINE** | 5-phase hybrid      | Complex projects needing structure                  |
 
 ---
 
@@ -113,13 +113,13 @@ UNDERSTAND ──▶ GATHER ──▶ PLAN ──▶ EXECUTE ──▶ REVIEW
 (1 agent)      (parallel) (1 agent)  (parallel)   (1 agent)
 ```
 
-| Phase | Agents | What happens |
-|-------|--------|-------------|
-| **UNDERSTAND** | 1 | Clarify the task, ask questions |
-| **GATHER** | 2–3 | Scout codebase, gather context in parallel |
-| **PLAN** | 1 | Produce a detailed implementation plan |
-| **EXECUTE** | 2–4 | Build in parallel per plan |
-| **REVIEW** | 1 | Quality gate, summary report |
+| Phase          | Agents | What happens                               |
+| -------------- | ------ | ------------------------------------------ |
+| **UNDERSTAND** | 1      | Clarify the task, ask questions            |
+| **GATHER**     | 2–3    | Scout codebase, gather context in parallel |
+| **PLAN**       | 1      | Produce a detailed implementation plan     |
+| **EXECUTE**    | 2–4    | Build in parallel per plan                 |
+| **REVIEW**     | 1      | Quality gate, summary report               |
 
 ### How to use:
 
@@ -152,6 +152,7 @@ system_prompt: |
 
   Always output plans as structured markdown.
 ---
+
 # Planner Agent
 
 Specializes in breaking down complex requirements into implementable tasks.
@@ -161,15 +162,16 @@ Specializes in breaking down complex requirements into implementable tasks.
 
 ## When to Go Multi-Agent
 
-| Situation | Pattern | Why |
-|-----------|---------|-----|
-| Large feature with independent parts | TEAM | Parallelize implementation |
-| Audit → fix → verify workflows | CHAIN | Sequential dependency |
-| Greenfield project | PIPELINE | Full structure needed |
-| Quick bug fix | SINGLE | Overhead not worth it |
-| Code review | SINGLE | One agent is enough |
+| Situation                            | Pattern  | Why                        |
+| ------------------------------------ | -------- | -------------------------- |
+| Large feature with independent parts | TEAM     | Parallelize implementation |
+| Audit → fix → verify workflows       | CHAIN    | Sequential dependency      |
+| Greenfield project                   | PIPELINE | Full structure needed      |
+| Quick bug fix                        | SINGLE   | Overhead not worth it      |
+| Code review                          | SINGLE   | One agent is enough        |
 
 **Rule of thumb**: Start single-agent. Go multi-agent when:
+
 1. A task naturally splits into 3+ independent pieces, OR
 2. You need structured quality gates (audit → check → approve), OR
 3. You're building something from scratch and want the full process.
@@ -184,3 +186,59 @@ Multi-agent means multiple LLM calls. To keep it cheap:
 - Reserve the best model for builders only
 - TEAM mode is the most efficient (parallel = less wall-clock time)
 - CHAIN mode uses the most tokens (each step sees full history)
+
+---
+
+## OpenCode Multi-Agent with ECC
+
+[everything-claude-code](https://github.com/affaan-m/everything-claude-code) adds native
+multi-agent orchestration to OpenCode — no manual model switching.
+
+### ECC Agent Fleet
+
+| Agent                  | Model (OpenCode Go) | Role                                       |
+| ---------------------- | ------------------- | ------------------------------------------ |
+| `build`                | Kimi K2.6           | Primary — writes code, implements features |
+| `planner`              | GLM-5.1             | Plans implementation, breaks into tasks    |
+| `architect`            | GLM-5.1             | System design, architectural decisions     |
+| `code-reviewer`        | MiMo V2.5 Pro       | Audits code quality, finds issues          |
+| `security-reviewer`    | MiMo V2.5 Pro       | Vulnerability detection, auth checks       |
+| `tdd-guide`            | DeepSeek V4 Pro     | Enforces test-first, 80%+ coverage         |
+| `build-error-resolver` | MiMo V2.5 Pro       | Fixes build/type errors, minimal diffs     |
+| `refactor-cleaner`     | DeepSeek V4 Flash   | Dead code removal, consolidation           |
+| `doc-updater`          | GLM-5.1             | Documentation sync, codemap updates        |
+
+### How ECC Routes Models Automatically
+
+Each `/command` maps to an agent, which maps to a model:
+
+```
+/plan   → planner agent → GLM-5.1
+/tdd    → tdd-guide agent → DeepSeek V4 Pro
+/review → code-reviewer agent → MiMo V2.5 Pro
+```
+
+All run as `subtask: true` — they spin up, complete, and return. No manual model switching.
+
+### ECC as a TEAM Pattern
+
+```
+You: /plan add payment integration
+           ↓
+    planner (GLM-5.1) → structured task list
+           ↓
+    build (Kimi K2.6) → implements each task
+           ↓
+    /code-review
+    code-reviewer (MiMo V2.5 Pro) → audits output
+           ↓
+    /security
+    security-reviewer (MiMo V2.5 Pro) → checks auth/payment code
+           ↓
+    git commit
+```
+
+### Cost: All Included
+
+With OpenCode Go ($10/mo flat), all agents in the fleet run at zero extra cost —
+no per-token billing when switching between GLM-5.1, Kimi K2.6, MiMo V2.5 Pro, or DeepSeek.
