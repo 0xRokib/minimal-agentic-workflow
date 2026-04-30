@@ -1,144 +1,95 @@
-# Everything Claude Code - OpenCode Instructions
+# Minimal Agentic Workflow — OpenCode Instructions
 
-This document consolidates the core rules and guidelines from the Claude Code configuration for use with OpenCode.
+This project is a **documentation-and-configuration repository** — not a software application.
+Stack: Markdown, YAML, Bash only. No runtime. No npm. No builds. No tests.
 
-## Security Guidelines (CRITICAL)
+> Read `.context/CONTEXT.md` for domain glossary and conventions.
+> Read `AGENTS.md` for agent rules before making any changes.
 
-### Mandatory Security Checks
+---
+
+## Project Identity
+
+- **What it is**: A methodology + working template for AI-assisted coding at $5–10/month
+- **Primary tool**: OpenCode Go ($5 first month, $10/mo) — flat-rate access to DeepSeek, Kimi, GLM, Qwen, MiMo, MiniMax
+- **Agent tools**: OpenCode, Pi, Claude Code, Cursor
+- **Payment**: RedotPay (crypto → Visa card for API subscriptions)
+
+## Project Structure
+
+```
+README.md              ← ground truth — all referenced files must exist
+AGENTS.md              ← rules for all AI agents working on this project
+opencode.json          ← project-level OpenCode config
+.context/              ← shared knowledge (CONTEXT.md, ARCHITECTURE.md, todo.md)
+docs/                  ← 8 documentation guides
+agents/                ← custom agent definitions (markdown + YAML frontmatter)
+skills/                ← custom skills (SKILL.md files)
+.opencode/             ← OpenCode commands, prompts, instructions
+scripts/               ← automation (setup.sh)
+.pi/                   ← Pi agent config
+.github/workflows/     ← CI (docs validation)
+```
+
+## Hard Constraints (never violate)
+
+1. **No dependencies** — no npm, no pip, no gems, no build tools
+2. **No broken links** — every `[text](path.md)` must resolve to a real file
+3. **No orphaned files** — new files must be referenced in README or CONTEXT.md
+4. **No placeholder text** — replace all `[Your Project]`, `<!-- fill in -->`
+5. **No runtime tools** — `.opencode/tools/*.ts` files are excluded (require Node/Bun)
+
+---
+
+## Security Guidelines
 
 Before ANY commit:
-- [ ] No hardcoded secrets (API keys, passwords, tokens)
-- [ ] All user inputs validated
-- [ ] SQL injection prevention (parameterized queries)
-- [ ] XSS prevention (sanitized HTML)
-- [ ] CSRF protection enabled
-- [ ] Authentication/authorization verified
-- [ ] Rate limiting on all endpoints
-- [ ] Error messages don't leak sensitive data
 
-### Secret Management
-
-```typescript
-// NEVER: Hardcoded secrets
-const apiKey = "sk-proj-xxxxx"
-
-// ALWAYS: Environment variables
-const apiKey = process.env.OPENAI_API_KEY
-
-if (!apiKey) {
-  throw new Error('OPENAI_API_KEY not configured')
-}
-```
-
-### Security Response Protocol
+- [ ] No hardcoded API keys, tokens, or credentials in markdown or scripts
+- [ ] `.gitignore` covers all secret file patterns (`*.key`, `*.pem`, `.env*`)
+- [ ] No personal account data in docs
+- [ ] External URLs in docs are intentional (not injected)
 
 If security issue found:
+
 1. STOP immediately
 2. Use **security-reviewer** agent
-3. Fix CRITICAL issues before continuing
-4. Rotate any exposed secrets
-5. Review entire codebase for similar issues
+3. Remove the secret, rotate it, then commit the fix
 
 ---
 
-## Coding Style
-
-### Immutability (CRITICAL)
-
-ALWAYS create new objects, NEVER mutate:
-
-```javascript
-// WRONG: Mutation
-function updateUser(user, name) {
-  user.name = name  // MUTATION!
-  return user
-}
-
-// CORRECT: Immutability
-function updateUser(user, name) {
-  return {
-    ...user,
-    name
-  }
-}
-```
-
-### File Organization
-
-MANY SMALL FILES > FEW LARGE FILES:
-- High cohesion, low coupling
-- 200-400 lines typical, 800 max
-- Extract utilities from large components
-- Organize by feature/domain, not by type
-
-### Error Handling
-
-ALWAYS handle errors comprehensively:
-
-```typescript
-try {
-  const result = await riskyOperation()
-  return result
-} catch (error) {
-  console.error('Operation failed:', error)
-  throw new Error('Detailed user-friendly message')
-}
-```
-
-### Input Validation
-
-ALWAYS validate user input:
-
-```typescript
-import { z } from 'zod'
-
-const schema = z.object({
-  email: z.string().email(),
-  age: z.number().int().min(0).max(150)
-})
-
-const validated = schema.parse(input)
-```
-
-### Code Quality Checklist
+## Markdown Style
 
 Before marking work complete:
-- [ ] Code is readable and well-named
-- [ ] Functions are small (<50 lines)
-- [ ] Files are focused (<800 lines)
-- [ ] No deep nesting (>4 levels)
-- [ ] Proper error handling
-- [ ] No console.log statements
-- [ ] No hardcoded values
-- [ ] No mutation (immutable patterns used)
+
+- [ ] Section separators: `---` with blank lines before and after
+- [ ] Headings: ATX-style (`##`) with a space
+- [ ] Code blocks: fenced with triple backticks and language tag
+- [ ] Tables: aligned pipes with `|` on both edges
+- [ ] No lines over 200 chars (markdownlint rule)
+- [ ] No placeholder text remains
+- [ ] All internal links resolve
 
 ---
 
-## Testing Requirements
+## Verification (no test suite — use these instead)
 
-### Minimum Test Coverage: 80%
+After any change:
 
-Test Types (ALL required):
-1. **Unit Tests** - Individual functions, utilities, components
-2. **Integration Tests** - API endpoints, database operations
-3. **E2E Tests** - Critical user flows (Playwright)
+```bash
+# Check all docs referenced in README exist
+bash scripts/setup.sh --dry-run
 
-### Test-Driven Development
+# Check markdown linting
+npx markdownlint-cli2 "**/*.md" "!node_modules/**"
+```
 
-MANDATORY workflow:
-1. Write test first (RED)
-2. Run test - it should FAIL
-3. Write minimal implementation (GREEN)
-4. Run test - it should PASS
-5. Refactor (IMPROVE)
-6. Verify coverage (80%+)
+Before committing:
 
-### Troubleshooting Test Failures
-
-1. Use **tdd-guide** agent
-2. Check test isolation
-3. Verify mocks are correct
-4. Fix implementation, not tests (unless tests are wrong)
+- [ ] Every file referenced in README.md exists on disk
+- [ ] Every internal link `[text](path.md)` resolves
+- [ ] Markdown renders without errors
+- [ ] `.context/todo.md` updated
 
 ---
 
@@ -157,6 +108,7 @@ Types: feat, fix, refactor, docs, test, chore, perf, ci
 ### Pull Request Workflow
 
 When creating PRs:
+
 1. Analyze full commit history (not just latest commit)
 2. Use `git diff [base-branch]...HEAD` to see all changes
 3. Draft comprehensive PR summary
@@ -170,168 +122,71 @@ When creating PRs:
    - Identify dependencies and risks
    - Break down into phases
 
-2. **TDD Approach**
-   - Use **tdd-guide** agent
-   - Write tests first (RED)
-   - Implement to pass tests (GREEN)
-   - Refactor (IMPROVE)
-   - Verify 80%+ coverage
-
-3. **Code Review**
-   - Use **code-reviewer** agent immediately after writing code
-   - Address CRITICAL and HIGH issues
-   - Fix MEDIUM issues when possible
-
-4. **Commit & Push**
-   - Detailed commit messages
-   - Follow conventional commits format
+2. Bug fix or new feature - Use **tdd-guide** agent
+3. Architectural decision - Use **architect** agent
 
 ---
 
-## Agent Orchestration
+## Model Selection (OpenCode Go)
 
-### Available Agents
+| Task                         | Agent                             | Model         |
+| ---------------------------- | --------------------------------- | ------------- |
+| Planning, docs, ADRs         | planner / architect               | GLM-5.1       |
+| Writing content, refactoring | build                             | Kimi K2.6     |
+| Review, audit, bug fixes     | code-reviewer / security-reviewer | MiMo V2.5 Pro |
+| Doc updates                  | doc-updater                       | GLM-5.1       |
 
-| Agent | Purpose | When to Use |
-|-------|---------|-------------|
-| planner | Implementation planning | Complex features, refactoring |
-| architect | System design | Architectural decisions |
-| tdd-guide | Test-driven development | New features, bug fixes |
-| code-reviewer | Code review | After writing code |
-| security-reviewer | Security analysis | Before commits |
-| build-error-resolver | Fix build errors | When build fails |
-| e2e-runner | E2E testing | Critical user flows |
-| refactor-cleaner | Dead code cleanup | Code maintenance |
-| doc-updater | Documentation | Updating docs |
-| go-reviewer | Go code review | Go projects |
-| go-build-resolver | Go build errors | Go build failures |
-| database-reviewer | Database optimization | SQL, schema design |
-
-### Immediate Agent Usage
-
-No user prompt needed:
-1. Complex feature requests - Use **planner** agent
-2. Code just written/modified - Use **code-reviewer** agent
-3. Bug fix or new feature - Use **tdd-guide** agent
-4. Architectural decision - Use **architect** agent
+All models are included in the OpenCode Go flat rate — no per-token cost.
 
 ---
 
-## Performance Optimization
+## Workflow Patterns
 
-### Model Selection Strategy
+### Adding a new doc
 
-**Haiku** (90% of Sonnet capability, 3x cost savings):
-- Lightweight agents with frequent invocation
-- Pair programming and code generation
-- Worker agents in multi-agent systems
+1. Create `docs/<name>.md`
+2. Add entry to README.md documentation table
+3. Add entry to `.context/CONTEXT.md` key files table
+4. Run `/verify` to confirm links resolve
 
-**Sonnet** (Best coding model):
-- Main development work
-- Orchestrating multi-agent workflows
-- Complex coding tasks
+### Editing existing docs
 
-**Opus** (Deepest reasoning):
-- Complex architectural decisions
-- Maximum reasoning requirements
-- Research and analysis tasks
+1. Make change
+2. Check all internal links still resolve
+3. Run `/code-review` to check consistency
+4. Commit with `docs: <description>`
 
-### Context Window Management
+### Adding a skill
 
-Avoid last 20% of context window for:
-- Large-scale refactoring
-- Feature implementation spanning multiple files
-- Debugging complex interactions
-
-### Build Troubleshooting
-
-If build fails:
-1. Use **build-error-resolver** agent
-2. Analyze error messages
-3. Fix incrementally
-4. Verify after each fix
+1. Create `skills/<name>/SKILL.md`
+2. Reference in README if notable
+3. Optionally add to `instructions` in `opencode.json`
 
 ---
 
-## Common Patterns
+## Commands Available
 
-### API Response Format
-
-```typescript
-interface ApiResponse<T> {
-  success: boolean
-  data?: T
-  error?: string
-  meta?: {
-    total: number
-    page: number
-    limit: number
-  }
-}
-```
-
-### Custom Hooks Pattern
-
-```typescript
-export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value)
-
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedValue(value), delay)
-    return () => clearTimeout(handler)
-  }, [value, delay])
-
-  return debouncedValue
-}
-```
-
-### Repository Pattern
-
-```typescript
-interface Repository<T> {
-  findAll(filters?: Filters): Promise<T[]>
-  findById(id: string): Promise<T | null>
-  create(data: CreateDto): Promise<T>
-  update(id: string, data: UpdateDto): Promise<T>
-  delete(id: string): Promise<void>
-}
-```
+| Command        | What it does                            | Agent used                        |
+| -------------- | --------------------------------------- | --------------------------------- |
+| `/plan`        | Implementation plan for complex changes | planner (GLM-5.1)                 |
+| `/code-review` | Review docs for quality and consistency | code-reviewer (MiMo V2.5 Pro)     |
+| `/security`    | Check for exposed secrets or injection  | security-reviewer (MiMo V2.5 Pro) |
+| `/verify`      | Confirm links and paths resolve         | build                             |
+| `/update-docs` | Sync docs with current state            | doc-updater (GLM-5.1)             |
+| `/learn`       | Extract patterns from session           | build                             |
+| `/checkpoint`  | Save progress mid-session               | build                             |
 
 ---
 
-## OpenCode-Specific Notes
+## Success Criteria
 
-Since OpenCode does not support hooks, the following actions that were automated in Claude Code must be done manually:
+Work is complete when:
 
-### After Writing/Editing Code
-- Run `prettier --write <file>` to format JS/TS files
-- Run `npx tsc --noEmit` to check for TypeScript errors
-- Check for console.log statements and remove them
-
-### Before Committing
-- Run security checks manually
-- Verify no secrets in code
-- Run full test suite
-
-### Commands Available
-
-Use these commands in OpenCode:
-- `/plan` - Create implementation plan
-- `/tdd` - Enforce TDD workflow
-- `/code-review` - Review code changes
-- `/security` - Run security review
-- `/build-fix` - Fix build errors
-- `/e2e` - Generate E2E tests
-- `/refactor-clean` - Remove dead code
-- `/orchestrate` - Multi-agent workflow
+- All files referenced in README.md exist
+- All internal links resolve
+- Markdown renders without lint errors
+- No placeholder text remains
+- `.context/todo.md` is updated
+- Commit follows `category: description` format
 
 ---
-
-## Success Metrics
-
-You are successful when:
-- All tests pass (80%+ coverage)
-- No security vulnerabilities
-- Code is readable and maintainable
-- Performance is acceptable
-- User requirements are met
