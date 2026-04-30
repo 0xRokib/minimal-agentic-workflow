@@ -1,6 +1,7 @@
 # OpenCode Go — The $10/month AI Coding Plan
 
-OpenCode Go is a subscription that gives you API access to a curated fleet of coding-optimized LLMs for **$5 first month, then $10/month**. It's the cheapest way to run production-grade AI coding agents.
+OpenCode Go is a subscription that gives you API access to a curated fleet of coding-optimized LLMs
+for **$5 first month, then $10/month**. It's the cheapest way to run production-grade AI coding agents.
 
 ---
 
@@ -21,16 +22,17 @@ No per-token billing. No surprise invoices. Just flat $10/month.
 
 OpenCode Go rotates models based on what's best at any given time. The fleet typically includes:
 
-| Model Family | Strengths |
-|-------------|-----------|
+| Model Family          | Strengths                                                                |
+| --------------------- | ------------------------------------------------------------------------ |
 | **DeepSeek** (V3, R1) | Strong reasoning, large context windows, excellent for complex refactors |
-| **Qwen** (2.5, Coder) | Fast, reliable all-around coding, good at following instructions |
-| **Kimi** (K2) | Very long context (great for whole-codebase analysis) |
-| **GLM** | Solid reasoning, good at architecture and planning |
-| **MiniMax** | Quick iteration, responsive for simple tasks |
-| **MiMo** | Creative problem-solving, novel approaches |
+| **Qwen** (2.5, Coder) | Fast, reliable all-around coding, good at following instructions         |
+| **Kimi** (K2)         | Very long context (great for whole-codebase analysis)                    |
+| **GLM**               | Solid reasoning, good at architecture and planning                       |
+| **MiniMax**           | Quick iteration, responsive for simple tasks                             |
+| **MiMo**              | Creative problem-solving, novel approaches                               |
 
-> Models update regularly. The fleet is managed — you don't pick individual models, the platform routes to the best available one for your request. For specific model selection, use [OpenCode Zen](https://opencode.ai/zen).
+> Models update regularly. The fleet is managed — you don't pick individual models, the platform
+> routes to the best available one for your request. For specific model selection, use [OpenCode Zen](https://opencode.ai/zen).
 
 ---
 
@@ -59,22 +61,22 @@ OpenCode Go:         $10 flat. Same work, fixed cost.
 
 ### vs. GitHub Copilot
 
-| | OpenCode Go | GitHub Copilot |
-|---|---|---|
-| **Cost** | $5→$10/mo | $10/mo |
-| **Models** | 8+ curated | GPT-4o / Claude (limited) |
-| **Agent support** | Any OpenAI-compatible agent | IDE-only (mostly) |
-| **Flexibility** | Use with Pi, CLI, any tool | VS Code / JetBrains / neovim |
-| **Best for** | Agentic workflows, terminal-native devs | IDE-integrated autocomplete |
+|                   | OpenCode Go                             | GitHub Copilot               |
+| ----------------- | --------------------------------------- | ---------------------------- |
+| **Cost**          | $5→$10/mo                               | $10/mo                       |
+| **Models**        | 8+ curated                              | GPT-4o / Claude (limited)    |
+| **Agent support** | Any OpenAI-compatible agent             | IDE-only (mostly)            |
+| **Flexibility**   | Use with Pi, CLI, any tool              | VS Code / JetBrains / neovim |
+| **Best for**      | Agentic workflows, terminal-native devs | IDE-integrated autocomplete  |
 
 ### vs. ChatGPT Plus / Claude Pro
 
-| | OpenCode Go | ChatGPT Plus | Claude Pro |
-|---|---|---|---|
-| **Cost** | $5→$10/mo | $20/mo | $20/mo |
-| **Purpose** | Coding agents | General chat | General chat |
-| **API access** | Yes (OpenAI-compatible) | No (chat UI only) | No (chat UI only) |
-| **Agent support** | Full | None | Limited (MCP) |
+|                   | OpenCode Go             | ChatGPT Plus      | Claude Pro        |
+| ----------------- | ----------------------- | ----------------- | ----------------- |
+| **Cost**          | $5→$10/mo               | $20/mo            | $20/mo            |
+| **Purpose**       | Coding agents           | General chat      | General chat      |
+| **API access**    | Yes (OpenAI-compatible) | No (chat UI only) | No (chat UI only) |
+| **Agent support** | Full                    | None              | Limited (MCP)     |
 
 ---
 
@@ -82,13 +84,13 @@ OpenCode Go:         $10 flat. Same work, fixed cost.
 
 Zen is the pay-as-you-go complement to Go:
 
-| | Go | Zen |
-|---|---|---|
-| **Billing** | $10/mo flat | Per-token |
-| **Models** | Curated coding fleet | Premium: Claude, GPT-4o, Gemini |
-| **Min deposit** | N/A | $20 |
-| **Use case** | Daily driver | When you need a specific model |
-| **Model choice** | Automatic | You pick |
+|                  | Go                   | Zen                             |
+| ---------------- | -------------------- | ------------------------------- |
+| **Billing**      | $10/mo flat          | Per-token                       |
+| **Models**       | Curated coding fleet | Premium: Claude, GPT-4o, Gemini |
+| **Min deposit**  | N/A                  | $20                             |
+| **Use case**     | Daily driver         | When you need a specific model  |
+| **Model choice** | Automatic            | You pick                        |
 
 **Strategy**: Use Go for 80% of work. Top up Zen when you need Claude Sonnet for a gnarly refactor or GPT-4o for a complex greenfield build.
 
@@ -220,12 +222,12 @@ The API is hosted on standard infrastructure. Check [opencode.ai](https://openco
 
 ## Bottom Line
 
-| You want… | Use… |
-|-----------|------|
-| Cheapest AI coding | OpenCode Go ($5→$10/mo) |
-| Specific premium model | OpenCode Zen (pay-as-you-go) |
-| IDE autocomplete | GitHub Copilot |
-| General chat + coding | ChatGPT Plus |
+| You want…                      | Use…                          |
+| ------------------------------ | ----------------------------- |
+| Cheapest AI coding             | OpenCode Go ($5→$10/mo)       |
+| Specific premium model         | OpenCode Zen (pay-as-you-go)  |
+| IDE autocomplete               | GitHub Copilot                |
+| General chat + coding          | ChatGPT Plus                  |
 | Maximum control, no budget cap | Direct API (OpenAI/Anthropic) |
 
 For developers who work in the terminal and want agentic AI coding without unpredictable bills, OpenCode Go is the best deal available.
