@@ -1,0 +1,31 @@
+# Pi Agent Settings
+# See docs/multi-agent.md and docs/best-practices.md for context
+
+# Default model (override with --model flag)
+model: null  # null = use environment default
+
+# Mode configuration
+default_mode: normal  # normal | plan | spec | team | chain | pipeline
+
+# Agent-pi extensions
+extensions:
+  agent-pi:
+    enabled: true
+    security_guard: true
+    task_tracking: true
+    audit_log: true
+
+# Skills path
+skills_paths:
+  - ~/.agent-skills/skills
+  - ~/.mattpocock-skills
+  - ./skills
+
+# Agent definitions path
+agents_path: ./agents
+
+# Context files (auto-loaded at session start)
+context_files:
+  - .context/CONTEXT.md
+  - .context/ARCHITECTURE.md
+  - AGENTS.md

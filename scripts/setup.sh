@@ -126,13 +126,14 @@ echo "--- Step 4: Project Configuration ---"
 echo ""
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Copy AGENTS.md template to current project if not exists
 if [ -f "AGENTS.md" ]; then
     warn "AGENTS.md already exists in current directory"
 else
-    if [ -f "$SCRIPT_DIR/configs/AGENTS.md" ]; then
-        cp "$SCRIPT_DIR/configs/AGENTS.md" ./AGENTS.md
+    if [ -f "$PROJECT_ROOT/AGENTS.md" ]; then
+        cp "$PROJECT_ROOT/AGENTS.md" ./AGENTS.md
         ok "AGENTS.md created — edit it with your project details"
     fi
 fi
@@ -145,8 +146,8 @@ fi
 
 # Copy CONTEXT.md template
 if [ ! -f ".context/CONTEXT.md" ]; then
-    if [ -f "$SCRIPT_DIR/configs/CONTEXT.md" ]; then
-        cp "$SCRIPT_DIR/configs/CONTEXT.md" .context/CONTEXT.md
+    if [ -f "$PROJECT_ROOT/.context/CONTEXT.md" ]; then
+        cp "$PROJECT_ROOT/.context/CONTEXT.md" .context/CONTEXT.md
         ok ".context/CONTEXT.md created — edit with your project's shared language"
     fi
 fi
