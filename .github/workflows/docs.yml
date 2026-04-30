@@ -3,16 +3,9 @@ name: Docs Validation
 on:
   push:
     branches: [main]
-    paths:
-      - '**.md'
-      - '.context/**'
-      - 'AGENTS.md'
   pull_request:
     branches: [main]
-    paths:
-      - '**.md'
-      - '.context/**'
-      - 'AGENTS.md'
+  workflow_dispatch:
 
 jobs:
   validate:
@@ -51,11 +44,11 @@ jobs:
       - name: Check internal markdown links
         uses: gaurav-nelson/github-markdown-link-check@v1
         with:
-          use-quiet-mode: 'yes'
-          use-verbose-mode: 'yes'
-          config-file: '.github/mlc_config.json'
-          folder-path: '.'
-          check-modified-files-only: 'yes'
+          use-quiet-mode: "yes"
+          use-verbose-mode: "yes"
+          config-file: ".github/mlc_config.json"
+          folder-path: "."
+          check-modified-files-only: "yes"
 
       - name: Validate markdown formatting
         uses: DavidAnson/markdownlint-cli2-action@v16
