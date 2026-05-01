@@ -225,6 +225,12 @@ From [agent-skills](https://github.com/addyosmani/agent-skills) — powered by O
 | `/review` | Five-axis code review — quality gate before merge          |
 | `/ship`   | Safe deployment — feature flags, rollback-ready            |
 
+### Design System (design-md)
+
+| Skill     | What it does                                              |
+| --------- | --------------------------------------------------------- |
+| `/design` | Apply DESIGN.md tokens — pixel-perfect UI from real brands |
+
 ---
 
 ## 💵 Why This Is the Cheapest Path

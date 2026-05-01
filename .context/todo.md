@@ -21,6 +21,11 @@ _(none)_
 
 ## Done
 
+- [x] Add `skills/design-md/` skill for DESIGN.md workflow
+- [x] Update `AGENTS.md` with DESIGN.md rule
+- [x] Update `.context/CONTEXT.md` with DESIGN.md glossary + key files
+- [x] Update `docs/skills.md` with design-md install instructions
+- [x] Update `README.md` with `/design` command
 - [x] Add branching strategy to README (main + pi + opencode)
 - [x] Move OpenCode-specific content to `opencode` branch
 - [x] Move Pi-specific content to `pi` branch

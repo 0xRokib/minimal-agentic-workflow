@@ -40,6 +40,7 @@ Define → Plan → Build → Verify → Review → Ship
 | `shipping-and-launch` | Ship | `/ship` |
 | `security-and-hardening` | All | auto on auth/data |
 | `context-engineering` | All | session start |
+| `design-md` | UI | `/design` |
 
 ### mattpocock/skills — Real Engineering
 
@@ -187,6 +188,15 @@ pi install git:github.com/ruizrica/agent-pi
 # Skills auto-discovered from the package
 ```
 
+### design-md skill (per-project)
+
+```bash
+# Pi — copy to Pi skill directory
+cp -r skills/design-md ~/.pi/skills/
+
+# OpenCode — keep in ./skills/ and reference in opencode.json
+```
+
 ### affaan-m/everything-claude-code (ECC) — OpenCode
 
 ```bash
@@ -223,9 +233,16 @@ cp -r /tmp/ecc/.opencode/instructions .opencode/instructions
 4. **tdd** — Red-green-refactor
 5. **code-review-and-quality** — Quality gate before commit
 
-### Full Production Set (10 skills)
+### Full Production Set (11 skills)
 
-Add these once you're comfortable: 6. **spec-driven-development** — For new features 7. **context-engineering** — Better agent context management 8. **debugging-and-error-recovery** — Systematic debugging 9. **security-and-hardening** — Security awareness 10. **improve-codebase-architecture** — Weekly cleanup
+Add these once you're comfortable:
+
+6. **spec-driven-development** — For new features
+7. **context-engineering** — Better agent context management
+8. **debugging-and-error-recovery** — Systematic debugging
+9. **security-and-hardening** — Security awareness
+10. **improve-codebase-architecture** — Weekly cleanup
+11. **design-md** (`/design`) — Apply DESIGN.md tokens for pixel-perfect UI
 
 ---
 
