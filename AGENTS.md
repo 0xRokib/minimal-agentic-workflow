@@ -3,7 +3,7 @@
 ## Stack
 - **Content**: Markdown, YAML, Bash
 - **No runtime**: This is a documentation-and-config project — no package.json, no builds, no tests
-- **Agent tools**: OpenCode, Pi, agent-pi, Claude Code, Cursor
+- **Agent tools**: Any coding agent that supports custom instructions (OpenCode, Pi, Claude Code, Cursor, etc.)
 
 ---
 

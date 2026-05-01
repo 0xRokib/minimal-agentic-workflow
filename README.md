@@ -9,7 +9,33 @@ and the structure is ready to fork for your own project.
 
 ---
 
+## 🌿 Branching Strategy
+
+This repo has three branches — each a complete, standalone workflow:
+
+| Branch       | What it includes                                             | Use when                             |
+| ------------ | ------------------------------------------------------------ | ------------------------------------ |
+| **`main`**   | Shared core: AGENTS.md, docs, skills, scripts                 | Base for your own project            |
+| **`pi`**    | main + `.pi/` (Pi agent config, security guard, multi-agent)  | You want Pi as your coding agent     |
+| **`opencode`** | main + `.opencode/` + `opencode.json` (ECC fleet, 22 commands) | You want OpenCode as your coding agent |
+
+```
+git clone https://github.com/YOU/minimal-agentic-workflow.git
+cd minimal-agentic-workflow
+
+# Choose your branch:
+git checkout pi        # Pi workflow
+git checkout opencode  # OpenCode workflow
+git checkout main      # Start from scratch — base template
+```
+
+> **Tip**: Fork the branch you want, not main. Each branch is self-contained and ready to use.
+
+---
+
 ## 💰 The Engine: OpenCode Go
+
+> Applicable to the `opencode` branch. Pi and other agents work with any LLM provider.
 
 |                | OpenCode Go                                                                           |
 | -------------- | ------------------------------------------------------------------------------------- |
@@ -41,7 +67,6 @@ and the structure is ready to fork for your own project.
 │              │   SKILLS LAYER  │                         │
 │              │  agent-skills   │                         │
 │              │  mattpocock     │                         │
-│              │  agent-pi       │                         │
 │              └───────┬────────┘                         │
 │                      │                                  │
 │         ┌────────────┼────────────┐                     │
@@ -69,33 +94,30 @@ and the structure is ready to fork for your own project.
 
 ## ⚡ Quick Start
 
-### 1. Clone this repo
+### 1. Clone the branch you want
 
 ```bash
+# Clone the full repo
 git clone https://github.com/YOU/minimal-agentic-workflow.git
 cd minimal-agentic-workflow
 
-# This repo IS the template. It follows its own best practices.
-# AGENTS.md      → rules for AI agents working on your project
-# .context/      → shared language, architecture decisions, task board
-# .pi/           → agent settings + security guard
-# agents/        → custom agent definitions go here
-# skills/        → custom skills go here
-# docs/          → the full methodology
+# Switch to your branch:
+git checkout pi        # Pi coding agent
+git checkout opencode  # OpenCode coding agent
+# Or start from main and add tools yourself
 ```
 
-### 2. Install the agent
+### 2. Install your coding agent
 
 ```bash
-# OpenCode (recommended)
+# OpenCode (recommended — flat-rate LLM access)
 # Download from https://opencode.ai — free, OSS, LSP-native
 
-# Or Pi (multi-agent support)
+# Or Pi (multi-agent support via agent-pi)
 npm install -g @mariozechner/pi-coding-agent
-pi install git:github.com/ruizrica/agent-pi
 ```
 
-### 3. Subscribe to OpenCode Go
+### 3. Subscribe to OpenCode Go (for OpenCode branch)
 
 1. Go to [opencode.ai/go](https://opencode.ai/go)
 2. Subscribe — **$5 first month, then $10/month**
@@ -128,11 +150,11 @@ npx skills@latest add mattpocock/skills
 
 | Component            | Tool                                                                                                        | Cost                            |
 | -------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------- |
-| **Coding Agent**     | [OpenCode](https://opencode.ai) (or [Pi](https://github.com/badlogic/pi-mono))                              | **Free** (OSS)                  |
+| **Coding Agent**     | [OpenCode](https://opencode.ai) or [Pi](https://github.com/badlogic/pi-mono)                                 | **Free** (OSS)                  |
 | **LLM Access**       | [OpenCode Go](https://opencode.ai/go)                                                                       | **$5 first month, then $10/mo** |
 | **Agent Skills**     | [agent-skills](https://github.com/addyosmani/agent-skills) + [skills](https://github.com/mattpocock/skills) | **Free** (OSS)                  |
-| **Multi-Agent**      | [agent-pi](https://github.com/ruizrica/agent-pi)                                                            | **Free** (OSS)                  |
-| **Project Template** | This repo — AGENTS.md, .context/, .pi/, agents/, skills/                                                    | **Free** (OSS)                  |
+| **Multi-Agent**      | [agent-pi](https://github.com/ruizrica/agent-pi) (Pi) or ECC fleet (OpenCode)                               | **Free** (OSS)                  |
+| **Project Template** | This repo — AGENTS.md, .context/, agents/, skills/, docs/                                                 | **Free** (OSS)                  |
 | **Payment Rail**     | [RedotPay](https://www.redotpay.com)                                                                        | **Free** (card)                 |
 
 **Total: $5 first month, $10/month ongoing.**
@@ -143,26 +165,25 @@ npx skills@latest add mattpocock/skills
 
 ### Getting Started
 
-| Document                                | What it covers                                                 |
-| --------------------------------------- | -------------------------------------------------------------- |
-| [OpenCode Go Plan](docs/opencode-go.md) | Plan details, model fleet, rate limits, Zen comparison, setup  |
-| [LLM Providers](docs/llm-providers.md)  | Provider comparison, cost estimates, model tiering strategy    |
-| [RedotPay Setup](docs/redotpay.md)      | Pay for AI APIs with crypto — virtual Visa cards, zero FX fees |
+| Document                               | What it covers                                                 |
+| -------------------------------------- | -------------------------------------------------------------- |
+| [LLM Providers](docs/llm-providers.md) | Provider comparison, cost estimates, model tiering strategy    |
+| [RedotPay Setup](docs/redotpay.md)     | Pay for AI APIs with crypto — virtual Visa cards, zero FX fees |
 
 ### Workflows
 
-| Document                                      | What it covers                                          |
-| --------------------------------------------- | ------------------------------------------------------- |
+| Document                                    | What it covers                                             |
+| ------------------------------------------ | ---------------------------------------------------------- |
 | [Single-Agent Workflow](docs/single-agent.md) | Day-to-day: think → plan → build → verify → commit      |
-| [Multi-Agent Workflow](docs/multi-agent.md)   | TEAM (parallel), CHAIN (sequential), PIPELINE (5-phase) |
-| [Skills System](docs/skills.md)               | How skills work, composing your own, which ones to use  |
+| [Multi-Agent Workflow](docs/multi-agent.md) | TEAM (parallel), CHAIN (sequential), PIPELINE (5-phase)  |
+| [Skills System](docs/skills.md)             | How skills work, composing your own, which ones to use    |
 
 ### Operations
 
-| Document                                 | What it covers                                               |
-| ---------------------------------------- | ------------------------------------------------------------ |
-| [Security Guide](docs/security.md)       | Prompt injection defense, secrets management, tool hardening |
-| [Best Practices](docs/best-practices.md) | Principles for building and running agent workflows          |
+| Document                                  | What it covers                                               |
+| ----------------------------------------- | ------------------------------------------------------------ |
+| [Security Guide](docs/security.md)        | Prompt injection defense, secrets management, tool hardening   |
+| [Best Practices](docs/best-practices.md)   | Principles for building and running agent workflows          |
 
 ---
 
@@ -185,24 +206,24 @@ From [agent-skills](https://github.com/addyosmani/agent-skills) — powered by O
 
 ### Engineering Fundamentals (mattpocock/skills)
 
-| Skill                            | What it does                                                           |
-| -------------------------------- | ---------------------------------------------------------------------- |
-| `/grill-me`                      | Align before coding — asks clarifying questions, saves hours of rework |
-| `/grill-with-docs`               | Shared language + ADRs — prevents verbose, misaligned code             |
-| `/tdd`                           | Red-green-refactor — tests first, proof not decoration                 |
-| `/diagnose`                      | Structured debugging — systematic over shotgun                         |
-| `/improve-codebase-architecture` | Weekly cleanup — fights entropy                                        |
+| Skill                             | What it does                                                          |
+| --------------------------------- | --------------------------------------------------------------------- |
+| `/grill-me`                       | Align before coding — asks clarifying questions, saves hours of rework |
+| `/grill-with-docs`                | Shared language + ADRs — prevents verbose, misaligned code            |
+| `/tdd`                            | Red-green-refactor — tests first, proof not decoration                  |
+| `/diagnose`                       | Structured debugging — systematic over shotgun                         |
+| `/improve-codebase-architecture`  | Weekly cleanup — fights entropy                                       |
 
 ### Production Engineering (addyosmani/agent-skills)
 
 | Skill     | What it does                                              |
 | --------- | --------------------------------------------------------- |
 | `/spec`   | Spec-driven development — define before you build         |
-| `/plan`   | Atomic task breakdown — small, verifiable, ordered        |
+| `/plan`   | Atomic task breakdown — small, verifiable, ordered          |
 | `/build`  | Incremental implementation — thin vertical slices         |
 | `/test`   | Browser testing + TDD — 80% unit, 15% integration, 5% e2e |
-| `/review` | Five-axis code review — quality gate before merge         |
-| `/ship`   | Safe deployment — feature flags, rollback-ready           |
+| `/review` | Five-axis code review — quality gate before merge          |
+| `/ship`   | Safe deployment — feature flags, rollback-ready            |
 
 ---
 

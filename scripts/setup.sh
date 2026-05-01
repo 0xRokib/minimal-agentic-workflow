@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # setup.sh — Bootstrap your minimal agentic workflow
 # Run: source setup.sh (or ./setup.sh if executable)
+#
+# Branch-aware: detects which branch you're on and installs accordingly.
+# main     → base setup, no specific agent
+# pi       → Pi + agent-pi
+# opencode → OpenCode + ECC fleet
 
 set -e
 
@@ -21,6 +26,10 @@ ok()    { echo -e "${GREEN}[OK]${NC} $1"; }
 warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
 err()   { echo -e "${RED}[ERR]${NC} $1"; }
 
+# --- Detect branch ---
+BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+info "Detected branch: $BRANCH"
+
 # --- Check prerequisites ---
 echo "--- Checking prerequisites ---"
 
@@ -32,7 +41,7 @@ else
     exit 1
 fi
 
-# Node.js (for pi, npm packages)
+# Node.js (for Pi and npm packages)
 if command -v node &> /dev/null; then
     ok "node found: $(node --version)"
 else
@@ -49,42 +58,76 @@ fi
 
 echo ""
 
-# --- Step 1: Install Pi (coding agent) ---
-echo "--- Step 1: Coding Agent ---"
-echo ""
-echo "Choose your coding agent:"
-echo "  [1] Pi (pi-mono) — TUI, multi-agent support, extensible"
-echo "  [2] OpenCode — CLI, LSP-enabled, desktop app available"
-echo "  [3] Skip — I already have one"
+# --- Install coding agent ---
+echo "--- Coding Agent ---"
 echo ""
 
-read -p "Choice [1-3]: " agent_choice
+if [ "$BRANCH" = "pi" ]; then
+    info "Branch: pi — installing Pi coding agent"
+    if command -v npm &> /dev/null; then
+        npm install -g @mariozechner/pi-coding-agent && ok "Pi installed"
+    else
+        err "npm is required to install Pi"
+    fi
 
-case $agent_choice in
-    1)
-        info "Installing Pi coding agent..."
-        if command -v npm &> /dev/null; then
-            npm install -g @mariozechner/pi-coding-agent && ok "Pi installed"
-        else
-            err "npm is required to install Pi"
-        fi
-        ;;
-    2)
-        info "Visit https://opencode.ai to download OpenCode for your platform"
-        info "Available as: terminal CLI, desktop app, and IDE extension"
-        ;;
-    3)
-        info "Skipping agent install"
-        ;;
-    *)
-        warn "Invalid choice, skipping"
-        ;;
-esac
+    echo ""
+    info "Installing agent-pi multi-agent extensions..."
+    if command -v pi &> /dev/null; then
+        pi install git:github.com/ruizrica/agent-pi && ok "agent-pi installed"
+    else
+        warn "Pi not found. Install Pi first, then run:"
+        warn "  pi install git:github.com/ruizrica/agent-pi"
+    fi
+
+elif [ "$BRANCH" = "opencode" ]; then
+    info "Branch: opencode — OpenCode"
+    info "Download from https://opencode.ai — free, OSS, LSP-native"
+    info "Available as: terminal CLI, desktop app, and IDE extension"
+
+    echo ""
+    info "Installing ECC skills for OpenCode..."
+    if [ -d "$HOME/.agent-skills" ]; then
+        warn "~/.agent-skills already exists, skipping clone"
+    else
+        git clone https://github.com/addyosmani/agent-skills.git "$HOME/.agent-skills" && \
+            ok "agent-skills installed to ~/.agent-skills"
+    fi
+
+else
+    info "Branch: main (base) — no specific agent installed"
+    echo "Choose your coding agent:"
+    echo "  [1] Pi (pi-mono) — TUI, multi-agent support"
+    echo "  [2] OpenCode — CLI, LSP-enabled"
+    echo "  [3] Skip — I already have one"
+    echo ""
+
+    read -p "Choice [1-3]: " agent_choice
+
+    case $agent_choice in
+        1)
+            info "Installing Pi coding agent..."
+            if command -v npm &> /dev/null; then
+                npm install -g @mariozechner/pi-coding-agent && ok "Pi installed"
+            else
+                err "npm is required to install Pi"
+            fi
+            ;;
+        2)
+            info "Visit https://opencode.ai to download OpenCode for your platform"
+            ;;
+        3)
+            info "Skipping agent install"
+            ;;
+        *)
+            warn "Invalid choice, skipping"
+            ;;
+    esac
+fi
 
 echo ""
 
-# --- Step 2: Install Skills ---
-echo "--- Step 2: Skills ---"
+# --- Install Skills ---
+echo "--- Skills ---"
 echo ""
 
 info "Cloning agent-skills (addyosmani)..."
@@ -106,23 +149,8 @@ fi
 
 echo ""
 
-# --- Step 3: Install agent-pi (multi-agent) ---
-echo "--- Step 3: Multi-Agent Extensions (agent-pi) ---"
-echo ""
-
-if command -v pi &> /dev/null; then
-    info "Installing agent-pi extensions for Pi..."
-    pi install git:github.com/ruizrica/agent-pi && \
-        ok "agent-pi installed"
-else
-    warn "Pi not found. Install Pi first, then run:"
-    warn "  pi install git:github.com/ruizrica/agent-pi"
-fi
-
-echo ""
-
-# --- Step 4: Project-level config ---
-echo "--- Step 4: Project Configuration ---"
+# --- Project-level config ---
+echo "--- Project Configuration ---"
 echo ""
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -154,14 +182,14 @@ fi
 
 echo ""
 
-# --- Step 5: LLM Configuration ---
-echo "--- Step 5: LLM Provider ---"
+# --- LLM Configuration ---
+echo "--- LLM Provider ---"
 echo ""
 
 echo "Set up your LLM access. Options:"
 echo ""
 echo "  [1] GitHub Copilot — \$10/mo, best value"
-echo "    → Log in with GitHub in Pi or OpenCode"
+echo "    → Log in with GitHub in your agent"
 echo ""
 echo "  [2] Anthropic API — pay-as-you-go"
 echo "    → export ANTHROPIC_API_KEY='sk-ant-...'"
@@ -180,7 +208,7 @@ echo ""
 read -p "Which provider? [1-5, or Enter to skip]: " llm_choice
 
 case $llm_choice in
-    1) info "Use 'pi --auth' or opencode login to connect GitHub Copilot" ;;
+    1) info "Use your agent's auth command to connect GitHub Copilot" ;;
     2) info "Set your key: export ANTHROPIC_API_KEY='sk-ant-...'" ;;
     3) info "Set your key: export OPENAI_API_KEY='sk-...'" ;;
     4) info "Set your key: export GOOGLE_API_KEY='...'" ;;
@@ -195,6 +223,7 @@ echo "============================================"
 echo -e "${GREEN}  Setup Complete!${NC}"
 echo "============================================"
 echo ""
+echo "Branch: $BRANCH"
 echo "Next steps:"
 echo "  1. Edit AGENTS.md with your project details"
 echo "  2. Edit .context/CONTEXT.md with your shared language"
