@@ -31,15 +31,21 @@
     },
     "learn": {
       "description": "Extract patterns and learnings from session",
-      "template": "{file:.opencode/commands/learn.md}\n\n$ARGUMENTS"
+      "template": "{file:.opencode/commands/learn.md}\n\n$ARGUMENTS",
+      "agent": "build",
+      "subtask": true
     },
     "checkpoint": {
       "description": "Save progress snapshot",
-      "template": "{file:.opencode/commands/checkpoint.md}\n\n$ARGUMENTS"
+      "template": "{file:.opencode/commands/checkpoint.md}\n\n$ARGUMENTS",
+      "agent": "build",
+      "subtask": true
     },
     "verify": {
       "description": "Verify all links, paths, and markdown render correctly",
-      "template": "{file:.opencode/commands/verify.md}\n\n$ARGUMENTS"
+      "template": "{file:.opencode/commands/verify.md}\n\n$ARGUMENTS",
+      "agent": "build",
+      "subtask": true
     }
   }
 }
