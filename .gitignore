@@ -42,3 +42,6 @@ coverage/
 tmp/
 temp/
 *.log
+
+# Scripts (not part of project)
+scripts/harness-audit.js
