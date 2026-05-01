@@ -14,6 +14,7 @@
 3. **Check all internal links** — every `[text](path.md)` must resolve to an existing file
 4. **Use `---` separators between sections** with blank lines before and after
 5. **Verify the setup script works** after changing paths or dependencies
+6. **Respect DESIGN.md** — if `DESIGN.md` exists in project root, read it before building any UI and follow its tokens exactly
 
 ---
 

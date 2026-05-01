@@ -201,6 +201,7 @@ All agents run as `subtask: true` — spin up, complete, return. No manual model
 | `/refactor-heavy` | refactor-heavy   | DeepSeek V4 Pro | Structural refactoring                          |
 | `/e2e`          | e2e-runner       | Kimi K2.6       | End-to-end test execution                      |
 | `/eval`         | build            | DeepSeek V4 Pro | Run evaluation harness                          |
+| `/design`       | build            | DeepSeek V4 Pro | Apply DESIGN.md tokens for matching UI          |
 
 ---
 

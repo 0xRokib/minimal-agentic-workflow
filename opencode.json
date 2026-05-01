@@ -46,6 +46,12 @@
       "template": "{file:.opencode/commands/verify.md}\n\n$ARGUMENTS",
       "agent": "build",
       "subtask": true
+    },
+    "design": {
+      "description": "Apply a DESIGN.md design system to generate matching UI",
+      "template": "{file:.opencode/commands/design.md}\n\n$ARGUMENTS",
+      "agent": "build",
+      "subtask": true
     }
   }
 }

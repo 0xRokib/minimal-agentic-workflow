@@ -10,6 +10,7 @@
 - [ ] Add CI/CD pipeline for doc validation (link checker)
 - [ ] Create more custom skills in `skills/`
 - [ ] Add agent definitions in `agents/`
+- [ ] Port `skills/design-md/` to `pi` branch (`.pi/settings.yaml` + copy skill)
 
 ---
 
@@ -21,6 +22,13 @@ _(none)_
 
 ## Done
 
+- [x] Add `skills/design-md/` skill for DESIGN.md workflow
+- [x] Add `.opencode/commands/design.md` slash command
+- [x] Register `/design` command in `opencode.json`
+- [x] Update `AGENTS.md` with DESIGN.md rule
+- [x] Update `.context/CONTEXT.md` with DESIGN.md glossary + key files
+- [x] Update `docs/skills.md` with design-md install instructions
+- [x] Update `README.md` with `/design` command
 - [x] Add branching strategy to README (main + pi + opencode)
 - [x] Rewrite README.md on opencode branch (OpenCode-specific)
 - [x] Rewrite docs/multi-agent.md on opencode branch (ECC fleet content)
