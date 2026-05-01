@@ -1,4 +1,4 @@
-# 🧠 Minimal Agentic Workflow
+# 🧠 Minimal Agentic Workflow (Experimental)
 
 > **A complete, opinionated guide to AI-assisted coding for $5–10/month.**
 > Clone it. Customize it. Ship faster.
