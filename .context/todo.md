@@ -21,6 +21,12 @@ _(none)_
 
 ## Done
 
+- [x] Add branching strategy to README (main + pi + opencode)
+- [x] Rewrite README.md on opencode branch (OpenCode-specific)
+- [x] Rewrite docs/multi-agent.md on opencode branch (ECC fleet content)
+- [x] Verify .pi/ deleted from this branch
+- [x] Verify opencode-go.md present in docs/
+- [x] Update .context/todo.md on opencode branch
 - [x] Create `docs/opencode-go.md` (was missing)
 - [x] Move `configs/AGENTS.md` → root `AGENTS.md`
 - [x] Move `configs/CONTEXT.md` → `.context/CONTEXT.md`
@@ -28,10 +34,28 @@ _(none)_
 - [x] Create `.context/todo.md`
 - [x] Remove `configs/` folder
 - [x] Update `scripts/setup.sh` paths
-- [x] Rewrite `docs/opencode-go.md` with comprehensive OpenCode Go knowledge
 - [x] Audit and normalize `---` separator style across all docs
 - [x] Make `.context/CONTEXT.md` project-specific (domain glossary, conventions, structure)
 - [x] Make `AGENTS.md` project-specific (rules adapted for docs-only project)
+
+---
+
+## Branch Architecture
+
+```
+main      ← shared core (no tool-specific config)
+  ├── docs/multi-agent.md (tool-agnostic patterns)
+  └── docs/opencode-go.md ← REMOVED (opencode branch only)
+
+pi        ← main + .pi/ (Pi config, agent-pi, security guard)
+  └── docs/multi-agent.md (agent-pi patterns)
+
+opencode  ← main + .opencode/ + opencode.json (ECC fleet)
+  ├── .opencode/ (22 commands, 16 agents, plugin deps)
+  ├── opencode.json
+  ├── docs/multi-agent.md (ECC fleet patterns)
+  └── docs/opencode-go.md (OpenCode Go plan details)
+```
 
 ---
 
