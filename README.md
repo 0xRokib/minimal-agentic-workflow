@@ -241,6 +241,12 @@ Skills are loaded from three paths configured in `.pi/settings.yaml`:
 | `/review` | Five-axis code review — quality gate before merge          |
 | `/ship`   | Safe deployment — feature flags, rollback-ready            |
 
+### Design System (design-md)
+
+| Skill     | What it does                                              |
+| --------- | --------------------------------------------------------- |
+| `/design` | Apply DESIGN.md tokens — pixel-perfect UI from real brands |
+
 ---
 
 ## 🛡️ Security Guard

@@ -18,6 +18,7 @@
 | **OpenCode Zen**     | Pay-as-you-go tier for premium models (Claude, GPT-4o, Gemini)                        |
 | **agent-pi**         | Multi-agent orchestration extension for the Pi coding agent                           |
 | **RedotPay**         | Crypto-to-Visa payment platform — bridge USDC/USDT to fiat for AI API subscriptions   |
+| **DESIGN.md**        | Plain-text design system document that AI agents read to generate consistent UI       |
 | **ADR**              | Architecture Decision Record — a lightweight document capturing a design decision     |
 | **Feedback loop**    | Running types/lint/tests after every ~50 lines of code to catch issues early          |
 
@@ -101,6 +102,7 @@ This is a documentation project. There are no unit tests, linters, or type check
 | `.opencode/instructions/`   | Base instructions loaded into every OpenCode session                   |
 | `opencode.json`             | Project-level OpenCode config — wires commands to agents               |
 | `skills/arch-review/`       | Lightweight architecture review skill                                  |
+| `skills/design-md/`         | Design system skill — apply DESIGN.md tokens to UI work                |
 | `skills/SKILL-TEMPLATE.md`  | Template for creating new skills                                       |
 | `scripts/setup.sh`          | Bootstrap script — installs agents, skills, and config                 |
 | `.gitignore`                | Git ignore rules (secrets, agent state, OS files)                      |
